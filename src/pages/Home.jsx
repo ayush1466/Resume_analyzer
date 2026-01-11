@@ -1,15 +1,44 @@
-import { useState } from 'react';
-import { Sparkles, Shield, Brain, Zap } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Sparkles, Shield, Brain, Zap, LogOut } from 'lucide-react';
 import UploadResume from '../components/UploadResume';
 import JobDescription from '../components/JobDescription';
 import AnalyzeButton from '../components/AnalyzeButton';
 import AnalysisResult from '../components/AnalysisResult';
+import Auth from './Auth';
 
 export default function Home() {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [jobDescription, setJobDescription] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
+  const [showAuth, setShowAuth] = useState(false);
+  const [user, setUser] = useState(null);
+
+  // Check if user is logged in on mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handleAuthSuccess = (userData) => {
+    setUser(userData);
+    setShowAuth(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    setUser(null);
+    setAnalysisResult(null);
+    setUploadedFile(null);
+    setJobDescription('');
+  };
+
+  // Show Auth page if Sign In is clicked
+  if (showAuth) {
+    return <Auth onBack={() => setShowAuth(false)} onAuthSuccess={handleAuthSuccess} />;
+  }
 
   const handleUpload = (file) => {
     setUploadedFile(file);
@@ -84,19 +113,39 @@ export default function Home() {
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 blur-lg opacity-50"></div>
                 <div className="relative w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <Sparkles className="w-7 h-7 text-white" />
+                  {/* <Sparkles className="w-7 h-7 text-white" /> */}
                 </div>
               </div>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                  AI Resume Analyzer
+                 CareerCortex
                 </h1>
-                <p className="text-xs text-gray-400">Powered by Advanced AI</p>
+                <p className="text-xs text-gray-400">Powered by BeAsT</p>
               </div>
             </div>
-            <button className="px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg text-sm font-medium transition-all">
-              Sign In
-            </button>
+            
+            {user ? (
+              <div className="flex items-center gap-4">
+                <div className="text-right">
+                  <p className="text-sm font-medium text-gray-300">{user.name}</p>
+                  <p className="text-xs text-gray-500">{user.email}</p>
+                </div>
+                <button 
+                  onClick={handleLogout}
+                  className="px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg text-sm font-medium transition-all flex items-center gap-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <button 
+                onClick={() => setShowAuth(true)}
+                className="px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg text-sm font-medium transition-all"
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </div>
       </header>
@@ -191,7 +240,7 @@ export default function Home() {
       <footer className="relative bg-gray-900/50 backdrop-blur-xl border-t border-gray-800 mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <p className="text-center text-gray-500 text-sm">
-            © 2025 AI Resume Analyzer • Powered by Advanced AI • Built with React & Tailwind CSS
+            © 2026 AI Resume Analyzer • Powered by Advanced AI • Built with React & Tailwind CSS
           </p>
         </div>
       </footer>
