@@ -19,7 +19,6 @@ const Auth = ({ onBack, onAuthSuccess }) => {
       ...prev,
       [name]: value
     }));
-    // Clear error for this field when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -55,7 +54,7 @@ const Auth = ({ onBack, onAuthSuccess }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     
     if (!validateForm()) {
@@ -64,20 +63,16 @@ const Auth = ({ onBack, onAuthSuccess }) => {
 
     setIsLoading(true);
 
-    // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
-      // TODO: Replace with actual API call
       console.log(isLogin ? 'Login' : 'Sign Up', formData);
       
-      // Mock success - store user data
       const userData = {
         name: formData.name || formData.email.split('@')[0],
         email: formData.email
       };
       localStorage.setItem('user', JSON.stringify(userData));
       
-      // Call success callback
       if (onAuthSuccess) {
         onAuthSuccess(userData);
       }
@@ -97,27 +92,21 @@ const Auth = ({ onBack, onAuthSuccess }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-4">
-      {/* Animated background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-700"></div>
       </div>
 
-      {/* Auth Card */}
       <div className="relative w-full max-w-md">
-        {/* Back Button */}
-        {onBack && (
-          <button
-            onClick={onBack}
-            className="absolute -top-16 left-0 flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Back to Home</span>
-          </button>
-        )}
+        <button
+          onClick={onBack}
+          className="mb-4 flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>Back to Home</span>
+        </button>
 
         <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border border-gray-700 shadow-2xl p-8">
-          {/* Logo */}
           <div className="flex items-center justify-center mb-8">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 blur-lg opacity-50"></div>
@@ -127,7 +116,6 @@ const Auth = ({ onBack, onAuthSuccess }) => {
             </div>
           </div>
 
-          {/* Title */}
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-100 mb-2">
               {isLogin ? 'Welcome Back' : 'Create Account'}
@@ -139,9 +127,7 @@ const Auth = ({ onBack, onAuthSuccess }) => {
             </p>
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Name Field (Sign Up Only) */}
+          <div className="space-y-5">
             {!isLogin && (
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -166,7 +152,6 @@ const Auth = ({ onBack, onAuthSuccess }) => {
               </div>
             )}
 
-            {/* Email Field */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Email Address
@@ -189,7 +174,6 @@ const Auth = ({ onBack, onAuthSuccess }) => {
               )}
             </div>
 
-            {/* Password Field */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Password
@@ -223,7 +207,6 @@ const Auth = ({ onBack, onAuthSuccess }) => {
               )}
             </div>
 
-            {/* Confirm Password Field (Sign Up Only) */}
             {!isLogin && (
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -248,7 +231,6 @@ const Auth = ({ onBack, onAuthSuccess }) => {
               </div>
             )}
 
-            {/* Forgot Password (Login Only) */}
             {isLogin && (
               <div className="flex justify-end">
                 <button
@@ -260,9 +242,8 @@ const Auth = ({ onBack, onAuthSuccess }) => {
               </div>
             )}
 
-            {/* Submit Button */}
             <button
-              type="submit"
+              onClick={handleSubmit}
               disabled={isLoading}
               className={`w-full py-3 rounded-xl font-semibold text-white transition-all duration-300 ${
                 isLoading
@@ -279,9 +260,8 @@ const Auth = ({ onBack, onAuthSuccess }) => {
                 <span>{isLogin ? 'Sign In' : 'Sign Up'}</span>
               )}
             </button>
-          </form>
+          </div>
 
-          {/* Toggle Mode */}
           <div className="mt-6 text-center">
             <p className="text-gray-400">
               {isLogin ? "Don't have an account?" : 'Already have an account?'}
@@ -294,7 +274,6 @@ const Auth = ({ onBack, onAuthSuccess }) => {
             </p>
           </div>
 
-          {/* Divider */}
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-700"></div>
@@ -304,7 +283,6 @@ const Auth = ({ onBack, onAuthSuccess }) => {
             </div>
           </div>
 
-          {/* Social Login Buttons */}
           <div className="grid grid-cols-2 gap-4">
             <button
               type="button"
