@@ -52,5 +52,4 @@ const Auth = ({ onBack }) => {
     </div>
   );
 };
-
 export default Auth;
