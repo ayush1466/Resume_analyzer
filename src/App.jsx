@@ -1,22 +1,16 @@
 import Home from './pages/Home';
 import './App.css';
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/clerk-react'
-
+import FooterSection from './components/Footer';   
+import FAQSection from './components/faq';    
+import HowItWorks from './components/HowItWorks';
 function App() {
   return (
     <>
       <Home />
-
-      <header>
-        <SignedOut>
-          <SignInButton />
-          <SignUpButton />
-        </SignedOut>
-
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
-      </header>
+      <HowItWorks />
+      <FAQSection />
+      <FooterSection />
     </>
   );
 }

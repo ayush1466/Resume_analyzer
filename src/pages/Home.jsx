@@ -162,14 +162,14 @@ export default function Home() {
               />
             </div>
 
-            <div className="max-w-2xl mx-auto">
+            {/* <div className="max-w-2xl mx-auto">
               <div className="bg-gray-800/30 border border-gray-700/50 rounded-lg p-3">
                 <div className="flex items-center justify-center gap-2 text-xs">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                   <span className="text-gray-400">Connected to Backend API</span>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mt-12 sm:mt-20">
               <div className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 rounded-xl shadow-xl p-5 sm:p-6">

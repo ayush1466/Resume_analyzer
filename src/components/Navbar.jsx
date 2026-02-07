@@ -24,7 +24,7 @@ export default function Navbar() {
               <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
                 CareerCortex
               </h1>
-              <p className="text-xs text-gray-400">Powered by BeAsT</p>
+              <p className="text-sm text-gray-400">Your AI Career Companion</p>
             </div>
           </div>
 
