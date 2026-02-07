@@ -1,29 +1,20 @@
-import { useState, useEffect } from 'react';
-import { Shield, Brain, Zap } from 'lucide-react';
-import Navbar from '../components/Navbar';
-import UploadResume from '../components/UploadResume';
-import JobDescription from '../components/JobDescription';
-import AnalyzeButton from '../components/AnalyzeButton';
-import AnalysisResult from '../components/AnalysisResult';
-import Auth from './Auth';
-import { ssrImportKey } from 'vite/runtime';
+import { useState, useEffect } from "react";
+import { Shield, Brain, Zap } from "lucide-react";
+import Navbar from "../components/Navbar";
+import UploadResume from "../components/UploadResume";
+import JobDescription from "../components/JobDescription";
+import AnalyzeButton from "../components/AnalyzeButton";
+import AnalysisResult from "../components/AnalysisResult";
+import Auth from "./Auth";
 
 export default function Home() {
   const [uploadedFile, setUploadedFile] = useState(null);
-  const [jobDescription, setJobDescription] = useState('');
+  const [jobDescription, setJobDescription] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
-  const [showAuth, setShowAuth] = useState(false);
-  const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 
-  // Check if user is logged in on mount
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
+  console.log("API:", import.meta.env.VITE_API_BASE_URL);
 
   const handleAuthSuccess = (userData) => {
     setUser(userData);
@@ -31,17 +22,12 @@ export default function Home() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
+    localStorage.removeItem("user");
     setUser(null);
     setAnalysisResult(null);
     setUploadedFile(null);
-    setJobDescription('');
+    setJobDescription("");
   };
-
-  // Show Auth page if Sign In is clicked
-  if (showAuth) {
-    return <Auth onBack={() => setShowAuth(false)} onAuthSuccess={handleAuthSuccess} />;
-  }
 
   const handleUpload = (file) => {
     setUploadedFile(file);
@@ -57,20 +43,22 @@ export default function Home() {
 
     try {
       const formData = new FormData();
-      formData.append('resume', uploadedFile);
-      formData.append('jobDescription', jobDescription);
+      formData.append("resume", uploadedFile);
+      formData.append("jobDescription", jobDescription);
 
-      const response = await fetch('http://localhost:5000/api/analyze', {
-        method: 'POST',
-        body: formData
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+      const response = await fetch(`${API_BASE_URL}/api/analyze`, {
+        method: "POST",
+        body: formData,
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        let errorMessage = 'Analysis failed';
+        let errorMessage = "Analysis failed";
 
         if (errorData.detail) {
-          if (typeof errorData.detail === 'object') {
+          if (typeof errorData.detail === "object") {
             errorMessage =
               errorData.detail.error ||
               errorData.detail.details ||
@@ -87,19 +75,17 @@ export default function Home() {
 
       const data = await response.json();
       setAnalysisResult(data);
-
     } catch (error) {
-      let errorMessage = 'Failed to analyze resume. Please try again.';
+      let errorMessage = "Failed to analyze resume. Please try again.";
 
       if (error.message) errorMessage = error.message;
 
-      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      if (error.name === "TypeError" && error.message.includes("fetch")) {
         errorMessage =
-          'Cannot connect to backend. Make sure the server is running on http://localhost:5000';
+          "Cannot connect to backend. Make sure the server is running on http://localhost:5000";
       }
 
       setError(errorMessage);
-      alert(`Analysis Failed:\n\n${errorMessage}\n\nCheck console for more details.`);
     } finally {
       setIsAnalyzing(false);
     }
@@ -107,7 +93,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-gray-100">
-
       {/* Animated background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -121,7 +106,6 @@ export default function Home() {
       <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {!analysisResult ? (
           <div className="space-y-8 sm:space-y-10">
-
             {/* Hero Section */}
             <div className="text-center mb-12 sm:mb-16">
               <div className="inline-block mb-4">
@@ -137,7 +121,8 @@ export default function Home() {
                 </span>
               </h2>
               <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto px-4">
-                Get instant AI-powered feedback, improve your ATS score, and stand out from the competition
+                Get instant AI-powered feedback, improve your ATS score, and
+                stand out from the competition
               </p>
             </div>
 
@@ -152,7 +137,10 @@ export default function Home() {
             )}
 
             <UploadResume onUpload={handleUpload} uploadedFile={uploadedFile} />
-            <JobDescription value={jobDescription} onChange={setJobDescription} />
+            <JobDescription
+              value={jobDescription}
+              onChange={setJobDescription}
+            />
 
             <div className="flex justify-center px-4">
               <AnalyzeButton
@@ -183,7 +171,9 @@ export default function Home() {
                 <div className="w-12 h-12 bg-purple-500/10 border border-purple-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Brain className="w-6 h-6 text-purple-400" />
                 </div>
-                <h3 className="font-semibold text-center">AI-Powered Insights</h3>
+                <h3 className="font-semibold text-center">
+                  AI-Powered Insights
+                </h3>
               </div>
 
               <div className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 rounded-xl shadow-xl p-5 sm:p-6">
@@ -193,7 +183,6 @@ export default function Home() {
                 <h3 className="font-semibold text-center">Instant Results</h3>
               </div>
             </div>
-
           </div>
         ) : (
           <AnalysisResult result={analysisResult} />
